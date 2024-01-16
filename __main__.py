@@ -26,6 +26,10 @@ queue = azure.storage.Queue('queue',
     account_name=account.name,
     resource_group_name=resource_group.name)
 
+queue = azure.storage.Queue('queue-too',
+    account_name=account.name,
+    resource_group_name=resource_group.name)
+
 # Create a storage container for the pages of the website.
 website = azure.storage.StorageAccountStaticWebsite(
     "website",
@@ -103,6 +107,18 @@ plan = azure.web.AppServicePlan(
     ),
 )
 
+# The 'ListStorageAccountKeys' function retrieves the keys of the Storage Account.
+account_keys = azure.storage.list_storage_account_keys(
+    resource_group_name=resource_group.name,
+    account_name=account.name
+)
+
+# Build the connection string using the first key.
+# connection_string = None
+connection_string = pulumi.Output.all(account.name, account_keys.keys[0].value).apply(
+    lambda args: f"DefaultEndpointsProtocol=https;AccountName={args[0]};AccountKey={args[1]};EndpointSuffix=core.windows.net"
+)
+
 # Create the Function App.
 app = azure.web.WebApp(
     "app",
@@ -111,6 +127,10 @@ app = azure.web.WebApp(
     kind="FunctionApp",
     site_config=azure.web.SiteConfigArgs(
         app_settings=[
+            azure.web.NameValuePairArgs(
+                name="primary_connection_string",
+                value=connection_string
+            ),
             azure.web.NameValuePairArgs(
                 name="APPINSIGHTS_INSTRUMENTATIONKEY", 
                 value=app_insights.instrumentation_key

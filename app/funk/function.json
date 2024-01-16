@@ -5,13 +5,15 @@
       "name": "msg",
       "type": "queueTrigger",
       "direction": "in",
-      "queueName": "func-queue",
-      "connection": "AzureWebJobsStorage"
+      "queueName": "queue",
+      "connection": "primary_connection_string"
     },
     {
-      "type": "http",
+      "type": "queue",
       "direction": "out",
-      "name": "$return"
+      "name": "msg_out",
+      "queueName": "queue-too",
+      "connection": "primary_connection_string"
     }
   ]
 }

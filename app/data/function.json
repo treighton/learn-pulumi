@@ -12,8 +12,8 @@
       "type": "queue",
       "direction": "out",
       "name": "msg",
-      "queueName": "func-queue",
-      "connection": "AzureWebJobsStorage"
+      "queueName": "queue",
+      "connection": "primary_connection_string"
     },
     {
       "type": "http",
