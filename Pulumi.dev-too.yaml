@@ -1,0 +1,6 @@
+config:
+  azure-native:location: WestUS
+  my-serverless-app:appPath: ./app
+  my-serverless-app:errorDocument: error.html
+  my-serverless-app:indexDocument: index.html
+  my-serverless-app:sitePath: ./www
